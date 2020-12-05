@@ -9,7 +9,7 @@
       "request": "launch",
       "name": "Launch Program",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}\\Day4\\ValidatePassports.js"
+      "program": "${workspaceFolder}/Day5"
     }
   ]
 }
