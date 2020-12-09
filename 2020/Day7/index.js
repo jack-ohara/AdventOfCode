@@ -6,13 +6,15 @@ fs.readFile('./Day7/Input.txt', 'utf8', (err, data) => {
     return;
   }
 
+  //test1();
+
   const validBagContents = getValidBagContents(data);
 
   // Part 1
   //console.log(findAllBagsThatCanContain('shiny gold', validBagContents).size);
 
   // Part 2
-  console.log(getAllBagsInBag('shiny gold', validBagContents).size);
+  console.log(getAllBagsInBagRecursively('shiny gold', validBagContents));
 });
 
 const getValidBagContents = (data) => {
@@ -64,15 +66,15 @@ const findAllBagsThatCanContain = (searchFor, allBags) => {
 };
 
 const getAllBagsInBagRecursively = (bagName, allBags) => {
-  const bagsContained = new Set();
+  let totalContainedBagCount = 0;
 
-  allBags[bagName].forEach((x) => bagsContained.add(x));
+  allBags[bagName].forEach((x) => {
+    let containedNumberOfBags = getAllBagsInBagRecursively(x.name, allBags);
 
-  bagsContained.forEach((x) =>
-    getAllBagsInBag(bagName, allBags).forEach((e) => bagsContained.add(e))
-  );
+    totalContainedBagCount += x.count * containedNumberOfBags + x.count;
+  });
 
-  return bagsContained;
+  return totalContainedBagCount;
 };
 
 const getAllBagsInBag = (topLevelBag, allBags) => {
@@ -105,4 +107,21 @@ const getAllBagsInBag = (topLevelBag, allBags) => {
   }
 
   return containedBagCount;
+};
+
+const test1 = () => {
+  const allBags = {
+    'shiny gold': [
+      { name: 'muted violet', count: 4 },
+      { name: 'dark blue', count: 1 },
+    ],
+    'muted violet': [{ name: 'pale green', count: 3 }],
+    'pale green': [],
+    'dark blue': [{ name: 'shiny red', count: 1 }],
+    'shiny red': [],
+  };
+
+  const result = getAllBagsInBagRecursively('shiny gold', allBags);
+
+  console.assert(result === 18, `Expected 18, received ${result}`);
 };
