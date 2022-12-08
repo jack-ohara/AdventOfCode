@@ -1,3 +1,5 @@
+import timeit
+
 def get_filesystem():
     with open('input.txt') as input_file:
         lines = input_file.read().splitlines()
@@ -38,14 +40,14 @@ def get_filesystem():
         
         return filesystem
 
-def part_one() -> int:
-    filesystem = get_filesystem()
+def part_one(filesystem) -> int:
+    filesystem = get_filesystem() if filesystem is None else filesystem
 
     all_values_under_threshold = [x for x in list(filesystem.values()) if x <= 100000]
     return sum(all_values_under_threshold)
 
-def part_two() -> int:
-    filesystem = get_filesystem()
+def part_two(filesystem) -> int:
+    filesystem = get_filesystem() if filesystem is None else filesystem
 
     remaining_space_on_disk = 70000000 - filesystem['/']
     min_size_of_dir_to_delete = 30000000 - remaining_space_on_disk
@@ -53,5 +55,12 @@ def part_two() -> int:
     sorted_eligible_dirs = sorted(eligible_dirs_to_delete)
     return sorted_eligible_dirs[0]
 
-print(part_one())
-print(part_two())
+start_time = timeit.default_timer()
+fs = get_filesystem()
+print(f'read file: {timeit.default_timer() - start_time}')
+start_time = timeit.default_timer()
+part_one(fs)
+print(f'part one: {timeit.default_timer() - start_time}')
+start_time = timeit.default_timer()
+part_two(fs)
+print(f'part two: {timeit.default_timer() - start_time}')
